@@ -76,5 +76,5 @@ class EMNIST(Dataset):
 
 
 if __name__ == '__main__':
-    ds = EMNIST(root='/home/lulu/Desktop/python/ml_efficiency/archive')
+    ds = EMNIST(root=r'C:\Users\User\Desktop\Python\ml_efficiency\archive')
     print(ds.__len__())
