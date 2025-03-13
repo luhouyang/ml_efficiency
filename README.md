@@ -42,3 +42,9 @@ pip install https://github.com/fabianp/memory_profiler/archive/fix_195.zip
 ```console
 pip install line_profiler[ipython]
 ```
+
+## polars
+
+```console
+pip install polars
+```

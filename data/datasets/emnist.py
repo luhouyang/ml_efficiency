@@ -8,18 +8,6 @@ import numpy as np
 import pandas as pd
 
 
-def get_emnist():
-    dataloader = DataLoader(
-        EMNIST(),
-        batch_size=32,
-        num_workers=4,
-        pin_memory=True,
-        shuffle=True,
-    )
-
-    return dataloader
-
-
 class EMNIST(Dataset):
 
     def __init__(self, root, selection='emnist-balanced', split='train'):
@@ -64,7 +52,8 @@ class EMNIST(Dataset):
         self.mapping = pd.read_csv(f'{root}/{selection}-mapping.txt', sep=' ')
 
         self.labels = np.array(dataset.iloc[:, 0])
-        self.data = np.array(dataset.iloc[:, 0:])
+        self.data = np.array(dataset.iloc[:, 1:]).astype('float32').reshape(
+            -1, 28, 28, 1).transpose([0, 2, 1, 3])
 
         del dataset
 
@@ -72,9 +61,36 @@ class EMNIST(Dataset):
         return len(self.data)
 
     def __getitem__(self, index):
-        pass
+        ts = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize(mean=(0.5), std=(0.5))
+        ])
+        return ts(self.data[index]), torch.tensor(self.labels[index],
+                                                  dtype=torch.long)
 
 
-if __name__ == '__main__':
-    ds = EMNIST(root=r'C:\Users\User\Desktop\Python\ml_efficiency\archive')
-    print(ds.__len__())
+def get_emnist(root):
+
+    return {
+        x:
+        DataLoader(
+            EMNIST(root=root, split=x),
+            batch_size=32,
+            num_workers=8,
+            pin_memory=True,
+            shuffle=True,
+            prefetch_factor=2,
+        )
+        for x in ['train', 'test']
+    }
+
+
+# if __name__ == '__main__':
+#     import timeit
+
+#     def pros():
+#         ds = EMNIST(root=r'C:\Users\User\Desktop\Python\ml_efficiency\archive')
+#         print(ds.__len__())
+#         print(ds.__getitem__(0))
+
+#     print("TIME:", timeit.timeit("pros()", globals=globals(), number=1))
