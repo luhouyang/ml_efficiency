@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 import torch.nn as nn
 
@@ -215,5 +216,37 @@ class ViT(nn.Module):
 
         return self.mlp_head(x)
 
-# optim: 
-# base: 
+
+# base: 91.37993631999852
+# compiled: 90.84370925999974
+
+# if __name__ == '__main__':
+#     import timeit
+
+#     torch.backends.cudnn.benchmark = True
+
+#     model = ViT(
+#         channels=1,
+#         depth=6,
+#         dim=64,
+#         dim_head=64,
+#         dropout=0.1,
+#         emb_dropout=0.1,
+#         heads=8,
+#         image_size=28,
+#         mlp_dim=128,
+#         num_classes=47,
+#         patch_size=7,
+#         pool='cls',
+#     ).cuda()
+
+#     torch.compile(model, mode='max-autotune')
+
+#     sample = torch.randn((2, 1, 28, 28)).cuda()
+
+#     times = []
+#     for i in range(10):
+#         times.append(
+#             timeit.timeit("model(sample)", globals=globals(), number=25000))
+
+#     print('TIME:', np.mean(times))

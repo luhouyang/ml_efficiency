@@ -123,25 +123,25 @@ class InPlaceCNNModel(nn.Module):
         return F.log_softmax(self.head(x), dim=-1)
 
 
-if __name__ == '__main__':
-    import timeit
+# if __name__ == '__main__':
+#     import timeit
 
-    # model = VanilaCNNModel(channels=1, num_classes=47).cuda()
-    # model = BigCNNModel(channels=1, num_classes=47).cuda()
+#     # model = VanilaCNNModel(channels=1, num_classes=47).cuda()
+#     # model = BigCNNModel(channels=1, num_classes=47).cuda()
 
-    # torch.backends.cudnn.benchmark = True
+#     # torch.backends.cudnn.benchmark = True
 
-    model = InPlaceCNNModel(channels=1, num_classes=47).cuda()
-    # torch.compile(model, mode='max-autotune')
+#     model = InPlaceCNNModel(channels=1, num_classes=47).cuda()
+#     # torch.compile(model, mode='max-autotune')
 
-    sample = torch.randn((2, 1, 28, 28)).cuda()
+#     sample = torch.randn((2, 1, 28, 28)).cuda()
 
-    times = []
-    for i in range(10):
-        times.append(
-            timeit.timeit("model(sample)", globals=globals(), number=25000))
+#     times = []
+#     for i in range(10):
+#         times.append(
+#             timeit.timeit("model(sample)", globals=globals(), number=25000))
 
-    print('TIME:', np.mean(times))
+#     print('TIME:', np.mean(times))
 
 # vanilla: 13.021086010000726
 # big: 13.135676969999622
