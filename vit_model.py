@@ -41,7 +41,7 @@ class Attention(nn.Module):
         self.heads = heads
         self.scale = dim_head**-0.5  # 1/sqrt(q)
 
-        self.norm = nn.LayerNorm(dim)  # normalize
+        self.norm = nn.LayerNorm(dim)  # normalize, LayerNorm | BatchNorm
 
         self.attend = nn.Softmax(dim=-1)  # calculate probability
         self.dropout = nn.Dropout(dropout)  # generalization
@@ -192,6 +192,7 @@ class ViT(nn.Module):
         self.mlp_head = nn.Sequential(
             nn.Linear(dim, mlp_dim),
             nn.GELU(),
+            nn.Dropout(dropout+0.2),
             nn.Linear(mlp_dim, num_classes),
         )
 
